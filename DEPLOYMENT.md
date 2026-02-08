@@ -7,7 +7,7 @@ Complete guide for getting CookieCommand running live for your troop.
 ## Quick Start (3 minutes for local testing)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/cookie-command.git
+git clone https://github.com/chchchadzilla/cookie-command.git
 cd cookie-command
 .\setup.bat        # Windows CMD
 # or
