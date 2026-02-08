@@ -1,0 +1,37 @@
+# dependencies
+node_modules/
+dist/
+
+# env files (contain secrets)
+.env
+.env.local
+.env.*.local
+
+# Python virtual env
+venv/
+
+# AI conversation / dev history (not needed in repo)
+AI-chat-logs.json
+.specstory/
+
+# PDF exports
+*.pdf
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+npm-debug.log*
+
+# ngrok
+ngrok.yml
+*.yml
+!.github/**/*.yml

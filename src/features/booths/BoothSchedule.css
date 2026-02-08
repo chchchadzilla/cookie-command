@@ -1,0 +1,82 @@
+
+.booth-page { display: flex; flex-direction: column; gap: 20px; }
+.booth-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.booth-header h2 { margin: 0; display: flex; align-items: center; gap: 10px; }
+.booth-filters { display: flex; gap: 4px; }
+.filter-btn {
+  background: white; border: 1px solid #e2e8f0;
+  padding: 6px 14px; border-radius: 6px;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer; color: #64748b;
+}
+.filter-btn.active { background: var(--gs-green); color: white; border-color: var(--gs-green); }
+
+.booth-list { display: flex; flex-direction: column; gap: 12px; }
+.no-booths { text-align: center; color: #94a3b8; padding: 40px; }
+
+.booth-card {
+  background: white; border-radius: 12px;
+  padding: 16px 20px; display: flex; gap: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border-left: 4px solid var(--gs-green);
+  transition: all 0.2s;
+  align-items: center;
+}
+.booth-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+.booth-card.past { opacity: 0.5; border-left-color: #cbd5e1; }
+
+.booth-date-col { min-width: 120px; flex-shrink: 0; }
+.booth-date { font-weight: 700; font-size: 0.95rem; color: #1f2937; }
+.booth-time { font-size: 0.82rem; color: #64748b; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
+.booth-duration { font-size: 0.72rem; color: #94a3b8; margin-top: 2px; }
+
+.booth-info { flex: 1; }
+.booth-business { font-weight: 700; font-size: 1rem; color: #1f2937; margin-bottom: 4px; }
+.booth-location { font-size: 0.85rem; color: #64748b; display: flex; align-items: flex-start; gap: 4px; }
+.booth-notes {
+  margin-top: 6px; font-size: 0.8rem; color: #f59e0b;
+  display: flex; align-items: flex-start; gap: 4px;
+  background: #fffbeb; padding: 6px 10px; border-radius: 6px;
+}
+
+.booth-delete-btn {
+  background: none;
+  border: 1px solid transparent;
+  color: #cbd5e1;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.booth-delete-btn:hover { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
+
+.booth-modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); display: flex;
+  justify-content: center; align-items: center; z-index: 2000;
+  padding: 16px;
+}
+.booth-modal {
+  background: white; padding: 28px; border-radius: 16px;
+  width: 90%; max-width: 400px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  text-align: center;
+}
+.booth-modal h4 { margin: 0 0 8px 0; }
+.booth-modal p { font-size: 0.9rem; color: #64748b; margin: 0 0 20px 0; }
+.booth-modal-actions { display: flex; gap: 10px; }
+.btn-sec {
+  flex: 1; background: #f1f5f9; color: #475569;
+  border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600;
+}
+.btn-danger {
+  flex: 1; background: #ef4444; color: white;
+  border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+@media (max-width: 600px) {
+  .booth-card { flex-direction: column; gap: 8px; }
+  .booth-date-col { min-width: unset; display: flex; gap: 12px; align-items: center; }
+  .booth-delete-btn { align-self: flex-end; }
+}
