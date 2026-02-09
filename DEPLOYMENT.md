@@ -115,30 +115,15 @@ Your app will be live at: `https://YOUR_USERNAME.github.io/cookie-command/`
 4. Enable **"Enforce HTTPS"**
 5. Update `vite.config.ts` base to `/` (already set)
 
-### Option B: Local Server + ngrok (Development/Testing)
+### Local Development Testing
 
-Useful for testing before deploying to production.
+For local testing before deploying to production:
 
-#### Setup ngrok
+1. Start your dev server: `npm run dev`
+2. Open `http://localhost:5173` in your browser
+3. Test on your local network by accessing `http://YOUR_LOCAL_IP:5173` from other devices
 
-1. Sign up at [ngrok.com](https://ngrok.com) (free account)
-2. Download ngrok for Windows
-3. Authenticate: `ngrok config add-authtoken YOUR_TOKEN`
-4. Start your dev server: `npm run dev`
-5. In another terminal: `ngrok http 5173`
-6. Share the ngrok URL (e.g., `https://abc123.ngrok-free.app`) with your troop
-
-**Note:** Free ngrok URLs change every time you restart. For a persistent URL, upgrade to ngrok's paid plan or use GitHub Pages.
-
-#### ngrok Quick Script
-
-Create `start-ngrok.bat`:
-```batch
-@echo off
-start cmd /k "cd /d %~dp0 && npm run dev"
-timeout /t 5
-ngrok http 5173
-```
+**Note:** For production deployment, always use GitHub Pages as described above. Local testing is sufficient for development.
 
 ---
 
