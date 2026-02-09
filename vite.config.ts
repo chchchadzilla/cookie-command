@@ -6,9 +6,7 @@ export default defineConfig({
   base: '/cookie-command/', // GitHub Pages subpath
   server: {
     port: 5173,
-    host: true, // Allow external access (needed for ngrok)
-    // Add this line to allow your specific Ngrok URL:
-    allowedHosts: ['app-one.cookiecommand.ngrok.app', 'app-one.conversatrait.ngrok.app'],
+    host: true, // Allow external access for local network testing
   },
   build: {
     outDir: 'dist',
