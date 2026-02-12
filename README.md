@@ -23,6 +23,7 @@
 - [Troop Calendar](#-troop-calendar)
 - [Notifications](#-notifications)
 - [Admin: Manage Troop](#-admin-manage-troop)
+- [Admin: Import from eBuddie](#-admin-import-from-ebuddie)
 - [Supported Cookie Types](#-supported-cookie-types)
 - [Technical Details](#-technical-details)
 - [For Other Troops](#-for-other-troops)
@@ -43,6 +44,7 @@
 | **📅 Troop Calendar** | Interactive calendar showing booths and troop meetings at a glance |
 | **🔔 Notifications** | Automatic alerts when meetings are added or cancelled |
 | **👥 Admin Panel** | Full troop management: add/remove scouts, edit inventory, transfer boxes |
+| **📤 eBuddie Import** | Import cookie inventory from Girl Scout eBuddie reports (Excel/CSV) |
 | **💵 Financial Summary** | Revenue, troop profit ($1/box), and amount owed to GSGLA council |
 | **📱 Mobile-Friendly** | Fully responsive design that works on phones, tablets, and desktops |
 | **🎨 Personalization** | Scouts can customize their dashboard banner color |
@@ -348,6 +350,74 @@ At the bottom of the admin page, the **"Reset All Data"** button will:
 
 ---
 
+## 📤 Admin: Import from eBuddie
+
+The **Import from eBuddie** tab allows administrators to quickly sync inventory data from Girl Scout eBuddie reports.
+
+### How to Import
+
+1. **Download Report from eBuddie**
+   - Log into your Girl Scout council's eBuddie system
+   - Navigate to cookie reports
+   - Download an inventory report (Excel `.xlsx` or CSV `.csv` format)
+
+2. **Upload to CookieCommand**
+   - Click the **"Import from eBuddie"** tab in the Admin Panel
+   - Choose your import mode:
+     - **Replace "Starting" inventory** — Best for initial inventory setup
+     - **Add to "Additional" inventory** — Best for restocking/additional orders
+   - Click **"Choose File"** and select your downloaded report
+   - The system will automatically parse the file
+
+3. **Preview and Confirm**
+   - Review the preview table showing all detected entries
+   - Verify that scout names match your CookieCommand roster
+   - Click **"Confirm Import"** to apply the changes
+
+### File Format Requirements
+
+The import tool supports:
+- **Excel files** (`.xlsx`, `.xls`)
+- **CSV files** (`.csv`)
+
+Expected format:
+- First row: Header row with cookie names
+- First column: Scout name or username
+- Remaining columns: Cookie quantities (numbers)
+
+Example:
+```csv
+Scout Name,Adventurefuls,Lemon-Ups,Trefoils,Thin Mints,...
+Emma Smith,12,10,8,25
+Sophia Johnson,15,12,10,30
+```
+
+The import tool automatically recognizes:
+- Full cookie names (e.g., "Thin Mints", "Samoas")
+- Abbreviations (e.g., "TMint", "Sam", "Advf")
+- Common variations (e.g., "Caramel Delites" for Samoas)
+
+### Download Template
+
+Click **"Download CSV Template"** to get a pre-formatted template with all cookie types and correct formatting.
+
+### Troubleshooting
+
+**"Could not match scout names"**
+- Scout names in the file must exactly match names in CookieCommand
+- Check for spelling differences or extra spaces
+- You can match by either full name or username
+
+**"No data found in file"**
+- Ensure the file has a header row
+- Make sure there's at least one data row with scout information
+
+**"No valid cookie data found"**
+- Verify cookie column headers match expected names or abbreviations
+- Check that quantities are numbers (not text)
+
+---
+
 ## 🍪 Supported Cookie Types
 
 | Abbreviation | Full Name | Price |
@@ -442,6 +512,12 @@ A: No. Private messages (DMs) are only visible to the sender and recipient. Howe
 
 **Q: How does the financial summary calculate?**
 A: Revenue = boxes sold × price per box. Troop profit = boxes sold × $1.00. Amount owed to GSGLA = revenue minus troop profit.
+
+**Q: Can I import data from eBuddie?**
+A: Yes! Admins can use the "Import from eBuddie" tab to upload Excel or CSV reports from the Girl Scout eBuddie system. The import tool automatically matches cookie names and scout names to update inventory quickly.
+
+**Q: Does the eBuddie import require my eBuddie login credentials?**
+A: No. You simply download a report file from eBuddie and upload it to CookieCommand. No credentials are stored or transmitted.
 
 ---
 
