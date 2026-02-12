@@ -3,13 +3,14 @@
 .admin-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 .admin-header h2 { margin: 0; display: flex; align-items: center; gap: 10px; }
 .admin-actions { display: flex; gap: 8px; }
-.btn-add, .btn-transfer {
+.btn-add, .btn-transfer, .btn-import {
   display: flex; align-items: center; gap: 6px;
   padding: 10px 16px; border-radius: 8px;
   font-weight: 600; cursor: pointer; border: none; font-size: 0.88rem;
 }
 .btn-add { background: var(--gs-green); color: white; }
 .btn-transfer { background: #e0f2fe; color: #0369a1; }
+.btn-import { background: #fef3c7; color: #d97706; }
 
 .admin-layout { display: grid; grid-template-columns: 340px 1fr; gap: 20px; min-height: 500px; }
 @media (max-width: 800px) { .admin-layout { grid-template-columns: 1fr; } }
@@ -139,4 +140,45 @@
 .btn-danger {
   flex: 1; background: #ef4444; color: white;
   border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 700;
+}
+
+/* Import Modal Specific Styles */
+.import-modal {
+  max-width: 600px;
+}
+.import-instructions {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+.import-instructions p {
+  margin: 8px 0;
+}
+.import-instructions strong {
+  color: #15803d;
+}
+.import-instructions ol, .import-instructions ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+.import-instructions li {
+  margin: 4px 0;
+  color: #475569;
+}
+.import-results {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+}
+.import-results pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
 }

@@ -1,8 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useCookieStore } from '../../lib/store';
 import { COOKIE_TYPES, COOKIE_LABELS, COOKIE_PRICE, CookieType, ScoutLevel } from '../../lib/types';
-import { Users, Plus, Trash2, Eye, EyeOff, Edit3, ArrowRight, RefreshCw } from 'lucide-react';
+import { Users, Plus, Trash2, Eye, EyeOff, Edit3, ArrowRight, RefreshCw, Upload } from 'lucide-react';
+import * as XLSX from 'xlsx';
 import './AdminPanel.css';
 
 export function AdminPanel() {
@@ -20,6 +21,9 @@ export function AdminPanel() {
   const [transferCookie, setTransferCookie] = useState<CookieType>('TMint');
   const [transferQty, setTransferQty] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [importModal, setImportModal] = useState(false);
+  const [importResults, setImportResults] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!currentUser?.isAdmin) return null;
 
@@ -58,6 +62,97 @@ export function AdminPanel() {
     if (selectedGirl === uid) setSelectedGirl(null);
   };
 
+  const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data);
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
+
+      // Parse the data - assuming format with scout names and cookie types
+      let updatedCount = 0;
+      let errorMessages: string[] = [];
+
+      // Try to identify the header row and data structure
+      // Common formats: Name, Cookie Type, Quantity or Name, TMint, Sam, Tags, etc.
+      if (jsonData.length < 2) {
+        throw new Error('File must have at least a header row and one data row');
+      }
+
+      const headers = jsonData[0].map((h: any) => String(h).trim().toLowerCase());
+      
+      // Check if this is a "wide" format (one column per cookie type)
+      const cookieColumns: { [key: string]: number } = {};
+      COOKIE_TYPES.forEach(ct => {
+        const cookieLabel = COOKIE_LABELS[ct].toLowerCase();
+        const idx = headers.findIndex(h => 
+          h === ct.toLowerCase() || 
+          h.includes(cookieLabel) ||
+          cookieLabel.includes(h)
+        );
+        if (idx >= 0) cookieColumns[ct] = idx;
+      });
+
+      const nameColIdx = headers.findIndex(h => 
+        h.includes('name') || h.includes('scout') || h.includes('girl')
+      );
+
+      if (nameColIdx === -1) {
+        throw new Error('Could not find name column. Please ensure your file has a column with "Name", "Scout", or "Girl" in the header.');
+      }
+
+      // Process each data row
+      for (let i = 1; i < jsonData.length; i++) {
+        const row = jsonData[i];
+        if (!row || row.length === 0) continue;
+
+        const scoutName = String(row[nameColIdx] || '').trim();
+        if (!scoutName) continue;
+
+        // Find the scout by name (case-insensitive partial match)
+        const scout = users.find(u => 
+          !u.isAdmin && u.name.toLowerCase().includes(scoutName.toLowerCase())
+        );
+
+        if (!scout) {
+          errorMessages.push(`Scout not found: ${scoutName}`);
+          continue;
+        }
+
+        // Update inventory for each cookie type found in columns
+        for (const [cookieType, colIdx] of Object.entries(cookieColumns)) {
+          const value = row[colIdx];
+          if (value !== undefined && value !== null && value !== '') {
+            const qty = parseInt(String(value));
+            if (!isNaN(qty) && qty >= 0) {
+              // Update the "sold" field with the imported quantity
+              await updateInventoryField(scout.id, cookieType as CookieType, 'sold', qty, true);
+              updatedCount++;
+            }
+          }
+        }
+      }
+
+      setImportResults(`✅ Successfully imported data!\n\n• Updated ${updatedCount} inventory records\n• Found ${Object.keys(cookieColumns).length} cookie types\n${errorMessages.length > 0 ? '\n⚠️ Warnings:\n' + errorMessages.join('\n') : ''}`);
+    } catch (error) {
+      setImportResults(`❌ Import failed:\n\n${error instanceof Error ? error.message : String(error)}\n\nPlease check your file format and try again.`);
+    }
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleImportClick = () => {
+    setImportModal(true);
+    setImportResults(null);
+  };
+
   const selGirl = selectedGirl ? users.find(u => u.id === selectedGirl) : null;
   const selInv = selectedGirl ? fullInventory[selectedGirl] || {} : {};
 
@@ -66,6 +161,9 @@ export function AdminPanel() {
       <div className="admin-header">
         <h2><Users size={22} /> Troop Management</h2>
         <div className="admin-actions">
+          <button className="btn-import" onClick={handleImportClick}>
+            <Upload size={16} /> Import from eBudde
+          </button>
           <button className="btn-transfer" onClick={() => setTransferModal(true)}>
             <ArrowRight size={16} /> Quick Transfer
           </button>
@@ -278,6 +376,54 @@ export function AdminPanel() {
               <button className="btn-sec" onClick={() => setDeleteConfirm(null)}>Cancel</button>
               <button className="btn-danger" onClick={() => handleDelete(deleteConfirm)}>Delete Forever</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Import Modal */}
+      {importModal && (
+        <div className="modal-overlay" onClick={() => setImportModal(false)}>
+          <div className="modal import-modal" onClick={e => e.stopPropagation()}>
+            <h4>📥 Import from eBudde</h4>
+            {!importResults ? (
+              <>
+                <div className="import-instructions">
+                  <p><strong>How to import:</strong></p>
+                  <ol>
+                    <li>Go to eBudde and generate your sales report</li>
+                    <li>Export/download the report as Excel (.xlsx) or CSV (.csv)</li>
+                    <li>Upload the file here</li>
+                  </ol>
+                  <p><strong>Expected format:</strong></p>
+                  <ul>
+                    <li>Must have a column with scout names (header: "Name", "Scout", or "Girl")</li>
+                    <li>Must have columns for cookie types (e.g., "Thin Mints", "Samoas", "TMint", "Sam", etc.)</li>
+                    <li>Values represent number of boxes <strong>sold</strong></li>
+                  </ul>
+                </div>
+                <div className="modal-field">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".xlsx,.xls,.csv"
+                    onChange={handleImportFile}
+                    style={{ marginTop: '1rem' }}
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="import-results">
+                <pre>{importResults}</pre>
+                <div className="modal-actions" style={{ marginTop: '1rem' }}>
+                  <button className="btn-pri" onClick={() => setImportModal(false)}>Close</button>
+                </div>
+              </div>
+            )}
+            {!importResults && (
+              <div className="modal-actions">
+                <button className="btn-sec" onClick={() => setImportModal(false)}>Cancel</button>
+              </div>
+            )}
           </div>
         </div>
       )}
