@@ -113,10 +113,19 @@ export function AdminPanel() {
         const scoutName = String(row[nameColIdx] || '').trim();
         if (!scoutName) continue;
 
-        // Find the scout by name (case-insensitive partial match)
-        const scout = users.find(u => 
-          !u.isAdmin && u.name.toLowerCase().includes(scoutName.toLowerCase())
-        );
+        // Find the scout by name (case-insensitive exact match or partial match)
+        const scoutNameLower = scoutName.toLowerCase();
+        const scout = users.find(u => {
+          if (u.isAdmin) return false;
+          const userNameLower = u.name.toLowerCase();
+          // Try exact match first
+          if (userNameLower === scoutNameLower) return true;
+          // Then try if the full import name contains the user's name
+          if (scoutNameLower.includes(userNameLower)) return true;
+          // Finally try if the user's name contains the import name
+          if (userNameLower.includes(scoutNameLower)) return true;
+          return false;
+        });
 
         if (!scout) {
           errorMessages.push(`Scout not found: ${scoutName}`);
