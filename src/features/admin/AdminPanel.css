@@ -1,8 +1,48 @@
 
 .admin-page { display: flex; flex-direction: column; gap: 20px; }
-.admin-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.admin-header { display: flex; flex-direction: column; gap: 16px; }
 .admin-header h2 { margin: 0; display: flex; align-items: center; gap: 10px; }
-.admin-actions { display: flex; gap: 8px; }
+
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0;
+}
+
+.admin-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: -2px;
+}
+
+.admin-tab:hover {
+  color: #334155;
+  background: #f8fafc;
+}
+
+.admin-tab.active {
+  color: #0369a1;
+  border-bottom-color: #0369a1;
+}
+
+.manage-header-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
 .btn-add, .btn-transfer {
   display: flex; align-items: center; gap: 6px;
   padding: 10px 16px; border-radius: 8px;

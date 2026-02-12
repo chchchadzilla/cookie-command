@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import { useCookieStore } from '../../lib/store';
 import { COOKIE_TYPES, COOKIE_LABELS, COOKIE_PRICE, CookieType, ScoutLevel } from '../../lib/types';
-import { Users, Plus, Trash2, Eye, EyeOff, Edit3, ArrowRight, RefreshCw } from 'lucide-react';
+import { Users, Plus, Trash2, Eye, EyeOff, Edit3, ArrowRight, RefreshCw, Upload } from 'lucide-react';
+import { EbuddieImport } from './EbuddieImport';
 import './AdminPanel.css';
 
 export function AdminPanel() {
   const { currentUser, users, fullInventory, updateInventoryField, removeUser, addUser, transferBoxes, resetSystem, getRemaining } = useCookieStore();
+  const [activeTab, setActiveTab] = useState<'manage' | 'import'>('manage');
   const [showPins, setShowPins] = useState<Record<string, boolean>>({});
   const [selectedGirl, setSelectedGirl] = useState<string | null>(null);
   const [addModal, setAddModal] = useState(false);
@@ -65,15 +67,36 @@ export function AdminPanel() {
     <div className="admin-page">
       <div className="admin-header">
         <h2><Users size={22} /> Troop Management</h2>
-        <div className="admin-actions">
-          <button className="btn-transfer" onClick={() => setTransferModal(true)}>
-            <ArrowRight size={16} /> Quick Transfer
+        <div className="admin-tabs">
+          <button 
+            className={`admin-tab ${activeTab === 'manage' ? 'active' : ''}`}
+            onClick={() => setActiveTab('manage')}
+          >
+            <Users size={16} /> Manage Scouts
           </button>
-          <button className="btn-add" onClick={() => setAddModal(true)}>
-            <Plus size={16} /> Add Girl
+          <button 
+            className={`admin-tab ${activeTab === 'import' ? 'active' : ''}`}
+            onClick={() => setActiveTab('import')}
+          >
+            <Upload size={16} /> Import from eBuddie
           </button>
         </div>
       </div>
+
+      {activeTab === 'import' && (
+        <EbuddieImport />
+      )}
+
+      {activeTab === 'manage' && (
+        <>
+          <div className="manage-header-actions">
+            <button className="btn-transfer" onClick={() => setTransferModal(true)}>
+              <ArrowRight size={16} /> Quick Transfer
+            </button>
+            <button className="btn-add" onClick={() => setAddModal(true)}>
+              <Plus size={16} /> Add Girl
+            </button>
+          </div>
 
       <div className="admin-layout">
         {/* Girl List */}
@@ -185,6 +208,8 @@ export function AdminPanel() {
           <RefreshCw size={16} /> Reset All Data (New Season)
         </button>
       </div>
+        </>
+      )}
 
       {/* Add Girl Modal */}
       {addModal && (
