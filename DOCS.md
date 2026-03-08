@@ -28,7 +28,7 @@ CookieCommand is a Girl Scout cookie season management application. The architec
 
 ```
 ┌─────────────────────────────────────────────┐
-│           GitHub Pages / ngrok              │
+│           GitHub Pages                      │
 │         (Static SPA Hosting)                │
 ├─────────────────────────────────────────────┤
 │                                             │
@@ -93,7 +93,6 @@ CookieCommand is a Girl Scout cookie season management application. The architec
 | **Database** | Supabase (PostgreSQL) | Persistent storage, auth, realtime |
 | **Auth** | Supabase GoTrue | PIN-based scout login, password admin login |
 | **Hosting** | GitHub Pages | Static SPA deployment |
-| **Tunnel** | ngrok | Local dev exposure to internet |
 | **CI/CD** | GitHub Actions | Automated build + deploy |
 
 ---
@@ -446,15 +445,18 @@ User → cookiecommand.com → GitHub Pages → Supabase Cloud
 - Custom domain CNAME configured in repo settings
 - All data flows directly from browser to Supabase (no middleware)
 
-### Option B: Local Server + ngrok (Development / Testing)
+### Local Development
+
+For local testing before deploying:
 
 ```
-User → ngrok URL → Local Vite dev server → Supabase Cloud
+User → localhost:5173 → Local Vite dev server → Supabase Cloud
 ```
 
-- Run `npm run dev` on home machine
-- Run `ngrok http 5173` to expose
-- Share ngrok URL with troop members for testing
+- Run `npm run dev` to start local development server
+- Test on `http://localhost:5173`
+- Changes hot-reload automatically with Vite HMR
+- For production deployment, use GitHub Pages as described above
 
 ---
 

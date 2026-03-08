@@ -6,8 +6,7 @@ export default defineConfig({
   base: '/cookie-command/',
   server: {
     port: 5173,
-    host: true,
-    allowedHosts: ['app-one.cookiecommand.ngrok.app', 'app-one.conversatrait.ngrok.app'],
+    host: true, // Allow external access for local network testing
   },
   build: {
     outDir: 'dist',
